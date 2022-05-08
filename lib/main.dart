@@ -1,8 +1,8 @@
 import 'package:desktop/Widget/login_widget.dart';
+import 'package:desktop/add/voyage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop/ui/scan.dart';
 
 
 void main()  async {
@@ -21,7 +21,7 @@ class MainPage extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Scan();
+          return Voyage();
         } else {
           return LoginWidget();
         }

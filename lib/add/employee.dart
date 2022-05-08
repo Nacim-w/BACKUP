@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_manager/nfc_manager.dart';
@@ -52,6 +53,7 @@ String selectedRoute;
       // to call _requestPop function
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+            drawer: NavBar(),
             appBar: AppBar(
               backgroundColor: Colors.blue,
               title: Text( "New Data"),
@@ -116,6 +118,7 @@ String selectedRoute;
 }
 void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+            if(_matriculeController.text!="" && selectedRoute!=null  ){
       final Isodep = IsoDep.from(tag);
       if (Isodep == null) {
         print('Tag is not compatible with Isodep.');
@@ -123,7 +126,10 @@ void _tagRead() {
       }
       result.value = Isodep.identifier.toString();
       NfcManager.instance.stopSession();
-     try{
+
+            ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(duration: const Duration(seconds: 1) ,content: Text('voyage Ajouter')));
+            try{
           
 	  final response = await http.post
     (Uri.parse("http://192.168.1.7/faith/insertemployee.php"),
@@ -140,6 +146,13 @@ void _tagRead() {
 
        print("exception: ${e.toString()}");
   }
+          }
+          else{
+        ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+      FocusScope.of(context).unfocus();
+      }            
+     
 
     });
   }

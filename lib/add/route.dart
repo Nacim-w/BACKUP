@@ -1,3 +1,4 @@
+import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,10 +19,6 @@ class _routeState extends State<Route_class> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +28,11 @@ class _routeState extends State<Route_class> {
       // to call _requestPop function
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+             drawer: NavBar(),
             appBar: AppBar(
               backgroundColor: Colors.blue,
               title: Text( "New Data"),
               centerTitle: true,
-            ),
-            floatingActionButton: FloatingActionButton(
-              // code to save data
-              child: Icon(Icons.save),
-              backgroundColor: Colors.blue,
             ),
 
             // ui of route textfield, route textfield and image
@@ -64,10 +57,21 @@ class _routeState extends State<Route_class> {
             
                    ElevatedButton(
                           child: Text('send form'), onPressed: () {
+                      if(_routeController.text!=""){
                       routes();
                       ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Route Ajouter')));
-                      FocusScope.of(context).unfocus();            },),
+                      FocusScope.of(context).unfocus();            
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                      FocusScope.of(context).unfocus();
+                      }
+
+
+                      },
+                      ),
                 ],
               ),
             )));

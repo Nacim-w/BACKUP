@@ -1,3 +1,4 @@
+import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,19 +29,11 @@ class _vehiculeState extends State<Vehicule> {
       // to call _requestPop function
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+            drawer: NavBar(),
             appBar: AppBar(
               backgroundColor: Colors.blue,
               title: Text( "New Data"),
               centerTitle: true,
-              actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              vehicles();
-            },
-          ),
-        ],
             ),
             floatingActionButton: FloatingActionButton(
               // code to save data
@@ -71,17 +64,25 @@ class _vehiculeState extends State<Vehicule> {
 
                     ElevatedButton(
                           child: Text('send form'), onPressed: () {
-                      vehicles();
+                      if(_nameController.text!=""){
+                      vehicules();
                       ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Vehicule Ajouter')));
-                      FocusScope.of(context).unfocus();            },), 
+                      FocusScope.of(context).unfocus();   }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                      FocusScope.of(context).unfocus();
+                      }
+                               },
+                               ), 
                 ],
               ),
             )));
   }
 
 
- Future<List> vehicles() async {
+ Future<List> vehicules() async {
     try{
           
 	  final response = await http.post

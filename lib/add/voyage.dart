@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:desktop/add/presence.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../Widget/navbar.dart';
 
 
 class Voyage extends StatefulWidget {
@@ -18,7 +20,9 @@ setState(() {
 
 });
 print(jsonData);
-}Future getAllRoute()async{
+}
+
+Future getAllRoute()async{
 var response = await http.get(Uri.parse("http://192.168.1.7/faith/viewallroute.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
@@ -60,8 +64,10 @@ print(jsonData);
     // ui of data page
     return WillPopScope(
 
+
       // to call _requestPop function
         child: Scaffold(
+          drawer: NavBar(),
           resizeToAvoidBottomInset: false,
             appBar: AppBar(
               backgroundColor: Colors.blue,
@@ -135,10 +141,30 @@ print(jsonData);
                   
                    ElevatedButton(
                           child: Text('send form'), onPressed:() {
-                      voyages();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Voyage Ajouter')));
-                      FocusScope.of(context).unfocus();            },),
+                      
+                       if(selectedChauffeur!=null && selectedRoute!=null && selectedVehicule!=null ){
+                         voyages();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(duration: const Duration(seconds: 1) ,content: Text('voyage Ajouter')));
+
+                         Navigator.push(
+                           
+                          context,
+                          MaterialPageRoute(
+
+                              builder: (context) => Presence(text: selectedRoute)
+                              ),
+                        );                        
+                          }
+                          else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                      FocusScope.of(context).unfocus();
+                      }            
+                      
+                      
+                      
+                            },),
                 ],
               ),
             )));

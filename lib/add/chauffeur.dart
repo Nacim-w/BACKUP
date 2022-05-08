@@ -1,3 +1,4 @@
+import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,10 +21,7 @@ class _chauffeurState extends State<Chauffeur> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +31,11 @@ class _chauffeurState extends State<Chauffeur> {
       // to call _requestPop function
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+            drawer: NavBar(),
             appBar: AppBar(
               backgroundColor: Colors.blue,
               title: Text( "New Data"),
               centerTitle: true,
-            ),
-            floatingActionButton: FloatingActionButton(
-              // code to save data
-              child: Icon(Icons.save),
-              backgroundColor: Colors.blue,
             ),
 
             // ui of name textfield, direction textfield and image
@@ -71,9 +65,16 @@ class _chauffeurState extends State<Chauffeur> {
                    ElevatedButton(
                           child: Text('send form'),
                           onPressed: () {
+                         if(_nameController.text!=""){
                       chauffeurs();
                       ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Chauffeur Ajouter')));
+                         }
+                         else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                      FocusScope.of(context).unfocus();
+                      }
                       FocusScope.of(context).unfocus();            },
                            ),
                 ],

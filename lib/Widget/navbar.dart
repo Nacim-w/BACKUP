@@ -1,4 +1,5 @@
 import 'package:desktop/add/employee.dart';
+import 'package:desktop/add/presence.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -66,10 +67,24 @@ class NavBar extends StatelessWidget{
                               )),
                         ),
           ) ,
+          ListTile(
+           leading: Icon(Icons.present_to_all),
+           title: Text('Presence'),
+           onTap:()=>Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Presence(
+                              )),
+                        ),
+          ) ,
           Divider(
             thickness: 1,
           ),
-          
+           ListTile(
+           leading: Icon(Icons.settings),
+           title: Text('Settings'),
+           onTap:() {},
+          ) ,
            ListTile(
            leading: Icon(Icons.logout),
            title: Text('Logout'),
