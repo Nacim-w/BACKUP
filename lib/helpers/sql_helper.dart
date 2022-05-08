@@ -1,4 +1,4 @@
-// We will start with the import of necessary package,
+/* // We will start with the import of necessary package,
 
 import 'dart:async';
 import 'package:desktop/model/model_data.dart';
@@ -10,6 +10,7 @@ final String itemsTable = "itemsTable";
 final String idColumn = "idColumn";
 final String matriculeColumn = "matriculeColumn";
 final String tagIdColumn = "tagIdColumn";
+final String directionColumn = "directionColumn";
 final String imgColumn = "imgColumn";
 
 // In this SqlHelper class, we will create a method to manipulate the data.
@@ -49,6 +50,7 @@ class SqlHelper {
               "$idColumn INTEGER PRIMARY KEY, "
               "$matriculeColumn TEXT, "
               "$tagIdColumn TEXT,"
+              "$directionColumn TEXT,"
               "$imgColumn TEXT)");
         });
   }
@@ -73,6 +75,7 @@ class SqlHelper {
           idColumn,
           matriculeColumn,
           tagIdColumn,
+          directionColumn,
           imgColumn,
         ],
         where: "$idColumn = ?",
@@ -129,3 +132,4 @@ class SqlHelper {
     dbData.close();
   }
 }
+ */

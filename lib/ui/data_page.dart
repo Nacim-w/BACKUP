@@ -1,14 +1,12 @@
-import 'dart:io';
-
+/* import 'dart:io';
 import 'package:desktop/model/model_data.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DataPage extends StatefulWidget {
   final Data data;
 
-  DataPage({this.data}); // constructor
+  DataPage({this.data}); // constructor/*  */
 
   @override
   _DataPageState createState() => _DataPageState();
@@ -86,7 +84,7 @@ class _DataPageState extends State<DataPage> {
                         image: DecorationImage(
                             image: _editData.img != null
                                 ? FileImage(File(_editData.img))
-                                : AssetImage("images/user-default.png"),
+                                : AssetImage("assets/images/user-default.png"),
                             fit: BoxFit.cover),
                       ),
                     ),
@@ -145,3 +143,4 @@ class _DataPageState extends State<DataPage> {
     }
   }
 }
+ */

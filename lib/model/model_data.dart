@@ -1,4 +1,4 @@
-import 'package:desktop/helpers/sql_helper.dart';
+/* import 'package:desktop/helpers/sql_helper.dart';
 
 class Data {
   // to define the variables
@@ -34,3 +34,4 @@ class Data {
         " img: $img,description:$tagId,)";
   }
 }
+ */

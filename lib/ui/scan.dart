@@ -1,10 +1,10 @@
-import 'package:desktop/ui/home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:desktop/add/chauffeur.dart';
+import 'package:desktop/ui/navbar.dart';
+import 'package:desktop/ui/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
-
-
+import 'package:http/http.dart' as http;
 
 
 
@@ -17,30 +17,40 @@ class Scan extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: Text('SCAN MENU')),
+        drawer: NavBar(),
+        appBar: AppBar(
+          centerTitle: true,
+          title:Text('SCAN MENU'),
+          actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              test();
+              Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Chauffeur(
+                              )),
+                        );
+            },
+          ),
+        ],
+        ),
+          
+
+      
         body: SafeArea(
+           
           child: FutureBuilder<bool>(
             future: NfcManager.instance.isAvailable(),
             builder: (context, ss) =>
             ss.data != true
-                ? const Center(child: Text('NfcManager.isAvailable():'))
+                ? const Center(child: Text('Turn on NFC'))
                 : Flex(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               direction: Axis.vertical,
               children: [
-                Flexible(
-                  flex: 2,
-                  child: Container(
-                    child: SingleChildScrollView(
-                      child: ValueListenableBuilder<dynamic>(
-                        valueListenable: result,
-                        builder: (context, value, _) =>
-                            Text('${value ?? ""}'),
-
-                      ),
-                    ),
-                  ),
-                ),
                 Flexible(
                   flex: 3,
                   child: GridView.count(
@@ -51,24 +61,17 @@ class Scan extends StatelessWidget {
                     mainAxisSpacing: 4,
                     children: [
                       ElevatedButton(
-                          child: Text('Tag Read'), onPressed: _tagRead),
-                      ElevatedButton(
-                          child: Text('Clear'), onPressed: _tagClear),
+                          child: Text('Tag Read'), onPressed: _tagRead),                         
                       ElevatedButton(
                           child: Text('Go to management'), onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomePage(
+                              builder: (context) => Chauffeur(
                               )),
                         );
                       }
-                      ),
-                      ElevatedButton(
-                          child: Text('Log Out'), onPressed:() => FirebaseAuth.instance.signOut()
-                      ),
-
-
+                      ),                                     
                     ],
                   ),
                 ),
@@ -87,16 +90,23 @@ class Scan extends StatelessWidget {
         print('Tag is not compatible with Isodep.');
         return;
       }
-      result.value = Isodep.identifier;
+      result.value = Isodep.identifier.toString();
       NfcManager.instance.stopSession();
-      print(Isodep.identifier.runtimeType);
-      print(Isodep.identifier);
+    print(Isodep.identifier.toString().runtimeType);
+    try{
+          
+	  final response = await http.post
+    (Uri.parse("http://192.168.1.7/faith/insertdata.php"),
+     body: {
+	    "tagid": result.value,
+	     });
+       print(response.body);
+	}
+  catch (e) {
+
+       print("exception: ${e.toString()}");
+  }
 
     });
   }
-
-  void _tagClear() {
-    result.value = "";
-  }
-
 }

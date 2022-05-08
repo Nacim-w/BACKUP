@@ -1,6 +1,4 @@
-import 'dart:io';
-import 'package:desktop/helpers/sql_helper.dart';
-import 'package:desktop/model/model_data.dart';
+/* import 'package:desktop/helpers/sql_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'data_page.dart';
@@ -115,19 +113,7 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.red),
               ),
-              leading: Container(
-                width: 80.0,
-                height: 80.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    // If you do not pick a picture, the default picture will be displayed
-                      image: data[index].img != null
-                          ? FileImage(File(data[index].img))
-                          : AssetImage("images/user-default.png"),
-                      fit: BoxFit.cover),
-                ),
-              ),
+             
             ),
           ),
         ),
@@ -239,3 +225,4 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 }
+ */
