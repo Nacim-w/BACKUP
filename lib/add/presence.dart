@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_manager/platform_tags.dart';
 
 
 class Presence extends StatefulWidget {
@@ -22,6 +24,8 @@ class _presenceState extends State<Presence> {
 
  
   // to define variables ///
+ValueNotifier<dynamic> result = ValueNotifier(null);
+
 Future getAllPresence()async{
     String selectedPresence="'"+widget.text+"'";
 var response = await http.get(Uri.parse("http://192.168.1.7/faith/presence.php?test=$selectedPresence"),headers: {"Accept":"application/json"});
@@ -56,18 +60,36 @@ print(jsonData);
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
+              actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Show Snackbar',
+              onPressed: () {
+                      getAllPresence();
+            },
+          ),
+        ],
+              
               backgroundColor: Colors.blue,
               title: Text( "New Data"),
               centerTitle: true,
             ),
 
             // ui of name textfield, direction textfield and image
-            body: SingleChildScrollView(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                                children: <Widget>[
+            body: ListView.builder(
+              itemCount: dataPresence.length,
+              itemBuilder: (context,index){
+                return 
+                ListTile(
+                leading: Text(dataPresence[index]['tagid']),
+                title:Text(dataPresence[index]['matricule']),
+                trailing: Text(  dataPresence[index]['Presence']),
+                );
+            }
+            ),
 
-                 ElevatedButton(
+
+                 /* ElevatedButton(
                           child: Text('send form'), onPressed: () {
                       try{
                       getAllPresence();
@@ -77,10 +99,43 @@ print(jsonData);
                                print("exception: ${e.toString()}");
                       }
                       FocusScope.of(context).unfocus();            },),
-                                ]
+                               */
               ),
-            )
-            ));
+            );
+        
   }
+
+void _tagRead() {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+
+      final Isodep = IsoDep.from(tag);
+      if (Isodep == null) {
+        print('Tag is not compatible with Isodep.');
+        return;
+      }
+      result.value = Isodep.identifier.toString();
+      NfcManager.instance.stopSession();
+
+            ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Tag scanned ')));
+            try{
+          
+	  final response = await http.post
+    (Uri.parse("http://192.168.1.7/faith/insertemployee.php"),
+     body: {
+      "id":   1.toString(),
+	     });
+       print(response.body);
+	}
+  catch (e) {
+
+       print("exception: ${e.toString()}");
+  }
+          
+    });
+  }
+
+
+
 
 }
