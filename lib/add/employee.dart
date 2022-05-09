@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,21 @@ String selectedRoute;
     super.initState();
     getAllRoute();
   }
-
+MaterialColor kPrimaryColor = const MaterialColor(
+  (0xFFFFE0B2),
+  const <int, Color>{
+    50: const Color(0xFFFFE0B2),
+    100: const Color(0xFFFFE0B2),
+    200: const Color(0xFFFFE0B2),
+    300: const Color(0xFFFFE0B2),
+    400: const Color(0xFFFFE0B2),
+    500: const Color(0xFFFFE0B2),
+    600: const Color(0xFFFFE0B2),
+    700: const Color(0xFFFFE0B2),
+    800: const Color(0xFFFFE0B2),
+    900: const Color(0xFFFFE0B2),
+  },
+);
 
   @override
   void dispose() {
@@ -48,15 +63,22 @@ String selectedRoute;
   @override
   Widget build(BuildContext context) {
     // ui of data page
-    return WillPopScope(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primarySwatch: kPrimaryColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        ),
+
+      ),
 
       // to call _requestPop function
-        child: Scaffold(
+        home: Scaffold(
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
-              backgroundColor: Colors.blue,
-              title: Text( "New Data"),
+              title: Text( "Employee"),
               centerTitle: true,
               actions: <Widget>[
           IconButton(
@@ -75,20 +97,24 @@ String selectedRoute;
               child: Column(
                 children: <Widget>[
                   
+                          SizedBox(height: 30),
 
                   // ui of name textfield
                   TextField(
                     controller: _matriculeController,
-                    decoration: InputDecoration(labelText: "Matricule"),
+                    decoration: InputDecoration(labelText: "Donnez Matricule"),
                     onChanged: (text) {
                       setState(() {
                       });
                     },
                   ),
+                      SizedBox(height: 50),
+
                  DropdownButton(value: selectedRoute,
                 isExpanded: true, //make true to take width of parent widget
                  underline: Container(),
-                  hint : Text('select Route'),
+                 isDense: true,
+                  hint : Text('Select Route'),
                   items: dataRoute.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['route']),
@@ -101,8 +127,10 @@ String selectedRoute;
                     });
                   },
                   ),
+                                        SizedBox(height: 30),
+
                   ElevatedButton(
-                          child: Text('send form'), onPressed: () {
+                          child: Text('Ajouter'), onPressed: () {
                       _tagRead();
                      
                       FocusScope.of(context).unfocus();            },), 
@@ -127,8 +155,11 @@ void _tagRead() {
       result.value = Isodep.identifier.toString();
       NfcManager.instance.stopSession();
 
-            ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(duration: const Duration(seconds: 1) ,content: Text('voyage Ajouter')));
+           Flushbar(
+                  message:  'Employee Ajouter',
+                  duration:  const Duration(seconds: 2),
+                ).show(context);
+                      FocusScope.of(context).unfocus();
             try{
           
 	  final response = await http.post
@@ -148,9 +179,12 @@ void _tagRead() {
   }
           }
           else{
-        ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
-      FocusScope.of(context).unfocus();
+            Flushbar(
+                  message:  'Please fill up the empty field',
+                  duration:  Duration(seconds: 2),
+                ).show(context);
+                      FocusScope.of(context).unfocus();
+        
       }            
      
 

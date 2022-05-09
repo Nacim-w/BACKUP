@@ -14,8 +14,8 @@ class NavBar extends StatelessWidget{
     return Drawer(
       child: ListView(
         children: [
-          UserAccountsDrawerHeader(accountName: Text("test"), accountEmail: const Text("test"), decoration: BoxDecoration(
-        color: Colors.blueGrey,
+          UserAccountsDrawerHeader(accountName: Text("Admin"), accountEmail: const Text("Admin@gmail.com"), decoration: BoxDecoration(
+        color: Colors.orange[100],
     )),
           ListTile(
            leading: Icon(Icons.travel_explore),
@@ -49,7 +49,7 @@ class NavBar extends StatelessWidget{
           ) ,
           ListTile(
            leading: Icon(Icons.add_location_alt ),
-           title: Text('Direction'),
+           title: Text('Route'),
            onTap:()=>Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -67,16 +67,7 @@ class NavBar extends StatelessWidget{
                               )),
                         ),
           ) ,
-          ListTile(
-           leading: Icon(Icons.present_to_all),
-           title: Text('Presence'),
-           onTap:()=>Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Presence(
-                              )),
-                        ),
-          ) ,
+         
           Divider(
             thickness: 1,
           ),

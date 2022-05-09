@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
+import 'package:draggable_fab/draggable_fab.dart';
+
 
 
 class Presence extends StatefulWidget {
@@ -24,7 +27,7 @@ class _presenceState extends State<Presence> {
 
  
   // to define variables ///
-ValueNotifier<dynamic> result = ValueNotifier(null);
+String result ;
 
 Future getAllPresence()async{
     String selectedPresence="'"+widget.text+"'";
@@ -36,8 +39,10 @@ setState(() {
 
 });
 print(jsonData);
-
 }
+
+
+
 @override
   void initState() {
     super.initState();
@@ -45,18 +50,40 @@ print(jsonData);
   }
   // to define variables ///
     List dataPresence=List();
+        List dataPresence2=List();
+
 
     // Clean up the controller when the widget is disposed.
-
+MaterialColor kPrimaryColor = const MaterialColor(
+  (0xFFFFE0B2),
+  const <int, Color>{
+    50: const Color(0xFFFFE0B2),
+    100: const Color(0xFFFFE0B2),
+    200: const Color(0xFFFFE0B2),
+    300: const Color(0xFFFFE0B2),
+    400: const Color(0xFFFFE0B2),
+    500: const Color(0xFFFFE0B2),
+    600: const Color(0xFFFFE0B2),
+    700: const Color(0xFFFFE0B2),
+    800: const Color(0xFFFFE0B2),
+    900: const Color(0xFFFFE0B2),
+  },
+);
   
 
   @override
   Widget build(BuildContext context) {
     // ui of data page
-    return WillPopScope(
+    return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primarySwatch: kPrimaryColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        ),
 
-      // to call _requestPop function
-        child: Scaffold(
+      ),
+      home : Scaffold(
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
@@ -69,43 +96,57 @@ print(jsonData);
             },
           ),
         ],
-              
-              backgroundColor: Colors.blue,
-              title: Text( "New Data"),
+              title: Text( "Liste De Présence "),
               centerTitle: true,
+            ),
+           
+
+            floatingActionButton: DraggableFab( 
+            child :FloatingActionButton(
+              // code to save data
+              child: Icon(Icons.nfc),
+              backgroundColor: Colors.orange[100],
+              onPressed:(){ _tagRead(context);},
+            ),
             ),
 
             // ui of name textfield, direction textfield and image
-            body: ListView.builder(
-              itemCount: dataPresence.length,
-              itemBuilder: (context,index){
-                return 
-                ListTile(
-                leading: Text(dataPresence[index]['tagid']),
-                title:Text(dataPresence[index]['matricule']),
-                trailing: Text(  dataPresence[index]['Presence']),
-                );
-            }
-            ),
-
-
-                 /* ElevatedButton(
-                          child: Text('send form'), onPressed: () {
-                      try{
-                      getAllPresence();
-                      }
-                      catch(e)
-                      {
-                               print("exception: ${e.toString()}");
-                      }
-                      FocusScope.of(context).unfocus();            },),
-                               */
+            body: FutureBuilder<List>(
+    builder: (context, snapshot){
+        return ListView.separated(
+          itemBuilder: (context , index){
+              return Container(
+                height: 100.0,
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child:Row(children: [
+                  Expanded(flex: 5 ,child: Text(dataPresence[index]['tagid'])),
+                  Expanded(flex: 2 ,child: Text(dataPresence[index]['matricule'])),
+                  Expanded(flex: 2 , child: Text(dataPresence[index]['Presence'])),
+                ]),
+              );
+          }
+          ,separatorBuilder: (context,index)
+          {
+            return Divider(thickness: 0.5,height: 0.5,);
+          },itemCount: dataPresence.length);
+    } ,
+    
+    ),
+            
+            
+            
+            
+            
+            
+            
+            
+           
               ),
             );
         
   }
 
-void _tagRead() {
+void _tagRead(context) {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
 
       final Isodep = IsoDep.from(tag);
@@ -113,25 +154,35 @@ void _tagRead() {
         print('Tag is not compatible with Isodep.');
         return;
       }
-      result.value = Isodep.identifier.toString();
+      result = Isodep.identifier.toString();
+      result="'"+result+"'";
       NfcManager.instance.stopSession();
 
-            ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Tag scanned ')));
+             getAllPresence();  
+              Flushbar(
+                  message:  'TAG Identifier',
+                  duration:  Duration(seconds: 2),
+                ).show(context);
             try{
           
-	  final response = await http.post
-    (Uri.parse("http://192.168.1.7/faith/insertemployee.php"),
-     body: {
-      "id":   1.toString(),
-	     });
-       print(response.body);
-	}
+	  var response = await http.put(Uri.parse("http://192.168.1.7/faith/updateemployee.php?test=$result"),headers: {"Accept":"application/json"});
+	var jsonBody = response.body;
+var jsonData = json.decode(jsonBody);
+setState(() {
+  dataPresence2=jsonData;
+
+});
+print(jsonData);
+
+  }
   catch (e) {
 
        print("exception: ${e.toString()}");
   }
-          
+if (dataPresence.contains(result)==true){
+  print("WORKED");
+}
+else{print(dataPresence.runtimeType);}
     });
   }
 

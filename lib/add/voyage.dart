@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/add/presence.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -58,20 +59,46 @@ print(jsonData);
     getAllVehicule();
     getAllRoute();
   }
+ MaterialColor kPrimaryColor = const MaterialColor(
+  (0xFFFFE0B2),
+  const <int, Color>{
+    50: const Color(0xFFFFE0B2),
+    100: const Color(0xFFFFE0B2),
+    200: const Color(0xFFFFE0B2),
+    300: const Color(0xFFFFE0B2),
+    400: const Color(0xFFFFE0B2),
+    500: const Color(0xFFFFE0B2),
+    600: const Color(0xFFFFE0B2),
+    700: const Color(0xFFFFE0B2),
+    800: const Color(0xFFFFE0B2),
+    900: const Color(0xFFFFE0B2),
+  },
+);
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    
     // ui of data page
-    return WillPopScope(
+    return MaterialApp(
+    debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+      primarySwatch: kPrimaryColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        ),
+      ),
 
 
       // to call _requestPop function
-        child: Scaffold(
+        home: Scaffold(
           drawer: NavBar(),
           resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              backgroundColor: Colors.blue,
-              title: Text( "New Data"),
+              title: Text( "Voyage"),
               centerTitle: true,
             ),
             /*floatingActionButton: FloatingActionButton(
@@ -86,10 +113,12 @@ print(jsonData);
               child: Column(
                 children: <Widget>[
                   // ui of chauffeur textfield
+                 SizedBox(height: 50),
                 DropdownButton(value: selectedChauffeur,
                 isExpanded: true, //make true to take width of parent widget
+                isDense: true,
                  underline: Container(),
-                  hint : Text('select Chauffeur'),
+                  hint : Text('Select Chauffeur'),
                   items: dataChauffeur.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['name']),
@@ -103,8 +132,10 @@ print(jsonData);
                   },
                   ),
                   // ui of vehicule textfield
+                  SizedBox(height: 50),
                DropdownButton(value: selectedVehicule,
-                  hint : Text('select Vehicule'),
+                  isDense: true,
+                  hint : Text('Select Vehicule'),
                   isExpanded: true, //make true to take width of parent widget
                   underline: Container(),
                   items: dataVehicule.map((list){
@@ -119,12 +150,13 @@ print(jsonData);
                     });
                   },
                   ),
-
+                  SizedBox(height: 50),
                   // ui of route textfield
                   DropdownButton(value: selectedRoute,
+                  isDense: true,
                   isExpanded: true, //make true to take width of parent widget
                   underline: Container(),
-                  hint : Text('select route'),
+                  hint : Text('Select route'),
                   items: dataRoute.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['route']),
@@ -138,14 +170,16 @@ print(jsonData);
                   },
                   ),
                 
-                  
+                  SizedBox(height: 50),
                    ElevatedButton(
-                          child: Text('send form'), onPressed:() {
+                          child: Text('Start'), onPressed:() {
                       
                        if(selectedChauffeur!=null && selectedRoute!=null && selectedVehicule!=null ){
                          voyages();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(duration: const Duration(seconds: 1) ,content: Text('voyage Ajouter')));
+                             Flushbar(
+                  message:  'Voyage Ajouter',
+                  duration:  Duration(seconds: 1),
+                ).show(context);
 
                          Navigator.push(
                            
@@ -159,7 +193,6 @@ print(jsonData);
                           else{
                         ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
-                      FocusScope.of(context).unfocus();
                       }            
                       
                       

@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,20 +19,40 @@ class _routeState extends State<Route_class> {
     _routeController.dispose();
     super.dispose();
   }
-
+MaterialColor kPrimaryColor = const MaterialColor(
+  (0xFFFFE0B2),
+  const <int, Color>{
+    50: const Color(0xFFFFE0B2),
+    100: const Color(0xFFFFE0B2),
+    200: const Color(0xFFFFE0B2),
+    300: const Color(0xFFFFE0B2),
+    400: const Color(0xFFFFE0B2),
+    500: const Color(0xFFFFE0B2),
+    600: const Color(0xFFFFE0B2),
+    700: const Color(0xFFFFE0B2),
+    800: const Color(0xFFFFE0B2),
+    900: const Color(0xFFFFE0B2),
+  },
+);
 
   @override
   Widget build(BuildContext context) {
     // ui of data page
-    return WillPopScope(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+      primarySwatch: kPrimaryColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        ),
+      ),
 
       // to call _requestPop function
-        child: Scaffold(
+        home: Scaffold(
           resizeToAvoidBottomInset: false,
              drawer: NavBar(),
             appBar: AppBar(
-              backgroundColor: Colors.blue,
-              title: Text( "New Data"),
+              title: Text( "Route"),
               centerTitle: true,
             ),
 
@@ -41,11 +62,12 @@ class _routeState extends State<Route_class> {
               child: Column(
                 children: <Widget>[
                   
+                          SizedBox(height: 30),
 
                   // ui of route textfield
                   TextField(
                     controller: _routeController,
-                    decoration: InputDecoration(labelText: "route"),
+                    decoration: InputDecoration(labelText: "Donnez Route"),
                     onChanged: (text) {
                       setState(() {
                       });
@@ -54,18 +76,23 @@ class _routeState extends State<Route_class> {
 
                   // ui of route textfield
                
-            
+                                      SizedBox(height: 50),
+
                    ElevatedButton(
-                          child: Text('send form'), onPressed: () {
+                          child: Text('Ajouter'), onPressed: () {
                       if(_routeController.text!=""){
                       routes();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Route Ajouter')));
+                       Flushbar(
+                  message:  "Route Ajouter",
+                  duration:  Duration(seconds: 1),
+                ).show(context);
                       FocusScope.of(context).unfocus();            
                       }
                       else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                       Flushbar(
+                  message:  'Please fill up the empty field',
+                  duration:  Duration(seconds: 2),
+                ).show(context);
                       FocusScope.of(context).unfocus();
                       }
 

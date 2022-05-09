@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,21 +21,42 @@ class _chauffeurState extends State<Chauffeur> {
 
     super.dispose();
   }
-
+MaterialColor kPrimaryColor = const MaterialColor(
+  (0xFFFFE0B2),
+  const <int, Color>{
+    50: const Color(0xFFFFE0B2),
+    100: const Color(0xFFFFE0B2),
+    200: const Color(0xFFFFE0B2),
+    300: const Color(0xFFFFE0B2),
+    400: const Color(0xFFFFE0B2),
+    500: const Color(0xFFFFE0B2),
+    600: const Color(0xFFFFE0B2),
+    700: const Color(0xFFFFE0B2),
+    800: const Color(0xFFFFE0B2),
+    900: const Color(0xFFFFE0B2),
+  },
+);
   
 
   @override
   Widget build(BuildContext context) {
     // ui of data page
-    return WillPopScope(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+      primarySwatch: kPrimaryColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        ),
+      ),
+
 
       // to call _requestPop function
-        child: Scaffold(
+        home: Scaffold(
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
-              backgroundColor: Colors.blue,
-              title: Text( "New Data"),
+              title: Text( "Chauffeur"),
               centerTitle: true,
             ),
 
@@ -44,16 +66,18 @@ class _chauffeurState extends State<Chauffeur> {
               child: Column(
                 children: <Widget>[
                   
+                    SizedBox(height: 30),
 
                   // ui of name textfield
                   TextField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: "name"),
+                    decoration: InputDecoration(labelText: "Nom"),
                     onChanged: (text) {
                       setState(() {
                       });
                     },
                   ),
+                      SizedBox(height: 30),
 
                   // ui of direction textfield
                   TextField(
@@ -62,18 +86,23 @@ class _chauffeurState extends State<Chauffeur> {
                     onChanged: (text) {
                     },
                   ),
+                      SizedBox(height: 50),
+
                    ElevatedButton(
-                          child: Text('send form'),
+                          child: Text('Ajouter'),
                           onPressed: () {
                          if(_nameController.text!=""){
                       chauffeurs();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: const Duration(seconds: 1) ,content: Text('Chauffeur Ajouter')));
+                      Flushbar(
+                  message:  'Chauffeur Ajouter',
+                  duration:  Duration(seconds: 1),
+                ).show(context);
                          }
                          else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
-                      FocusScope.of(context).unfocus();
+                         Flushbar(
+                  message:  'Please fill up the empty field',
+                  duration:  Duration(seconds: 2),
+                ).show(context);
                       }
                       FocusScope.of(context).unfocus();            },
                            ),

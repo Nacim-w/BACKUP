@@ -40,6 +40,9 @@ dependencies:
   firebase_auth: ^3.3.4
   firebase_core: ^1.14.1
   http: ^0.13.4
+  draggable_fab: ^0.1.4
+  another_flushbar: ^1.10.28
+
 
 dev_dependencies:
   flutter_test:
