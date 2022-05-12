@@ -1,8 +1,6 @@
 import 'package:desktop/add/employee.dart';
-import 'package:desktop/add/presence.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../add/chauffeur.dart';
 import '../add/route.dart';
 import '../add/vehicule.dart';
@@ -14,12 +12,12 @@ class NavBar extends StatelessWidget{
     return Drawer(
       child: ListView(
         children: [
-          UserAccountsDrawerHeader(accountName: Text("Admin"), accountEmail: const Text("Admin@gmail.com"), decoration: BoxDecoration(
+          UserAccountsDrawerHeader(accountName: const Text("Admin"), accountEmail: const Text("Admin@gmail.com"), decoration: BoxDecoration(
         color: Colors.orange[100],
     )),
           ListTile(
-           leading: Icon(Icons.travel_explore),
-           title: Text('Voyage'),
+           leading: const Icon(Icons.travel_explore),
+           title: const Text('Voyage'),
            onTap:()=>Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -38,8 +36,8 @@ class NavBar extends StatelessWidget{
                         ),
           ) ,
            ListTile(
-           leading: Icon(Icons.person_add),
-           title: Text('Employee'),
+           leading:const  Icon(Icons.person_add),
+           title: const Text('Employee'),
            onTap:()=>Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -48,8 +46,8 @@ class NavBar extends StatelessWidget{
                         ),
           ) ,
           ListTile(
-           leading: Icon(Icons.add_location_alt ),
-           title: Text('Route'),
+           leading: const Icon(Icons.add_location_alt ),
+           title: const Text('Route'),
            onTap:()=>Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -58,8 +56,8 @@ class NavBar extends StatelessWidget{
                         ),
           ) ,
           ListTile(
-           leading: Icon(Icons.bus_alert),
-           title: Text('Vehicule'),
+           leading: const Icon(Icons.bus_alert),
+           title:const  Text('Vehicule'),
            onTap:()=>Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -68,17 +66,18 @@ class NavBar extends StatelessWidget{
                         ),
           ) ,
          
-          Divider(
+         
+          const Divider(
             thickness: 1,
           ),
            ListTile(
-           leading: Icon(Icons.settings),
-           title: Text('Settings'),
+           leading: const Icon(Icons.settings),
+           title: const Text('Settings'),
            onTap:() {},
           ) ,
            ListTile(
-           leading: Icon(Icons.logout),
-           title: Text('Logout'),
+           leading:const  Icon(Icons.logout),
+           title:const  Text('Logout'),
            onTap:() => FirebaseAuth.instance.signOut(),
           ) ,
         ],

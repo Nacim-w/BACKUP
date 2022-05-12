@@ -27,7 +27,7 @@ class _presenceState extends State<Presence> {
 
  
   // to define variables ///
-String result ;
+String result="" ;
 
 Future getAllPresence()async{
     String selectedPresence="'"+widget.text+"'";
@@ -50,8 +50,6 @@ print(jsonData);
   }
   // to define variables ///
     List dataPresence=List();
-        List dataPresence2=List();
-
 
     // Clean up the controller when the widget is disposed.
 MaterialColor kPrimaryColor = const MaterialColor(
@@ -121,8 +119,22 @@ MaterialColor kPrimaryColor = const MaterialColor(
                 child:Row(children: [
                   Expanded(flex: 5 ,child: Text(dataPresence[index]['tagid'])),
                   Expanded(flex: 2 ,child: Text(dataPresence[index]['matricule'])),
-                  Expanded(flex: 2 , child: Text(dataPresence[index]['Presence'])),
-                ]),
+                  Expanded(flex: 2 , child: Row(
+                    children:[
+                     Container(
+                  width:60.0,
+                  height:40.0,
+                  decoration: BoxDecoration(color: (dataPresence[index]['Presence'] == "Present") ? Colors.green : Colors.red[400],
+                   borderRadius: BorderRadius.circular(10.0),
+                   ),
+                   child: Center(child: Text(dataPresence[index]['Presence']),
+                ),
+                     ),
+                ]
+                  ),
+                  ),
+                ]
+                ),
               );
           }
           ,separatorBuilder: (context,index)
@@ -148,6 +160,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
 
 void _tagRead(context) {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      result="";
 
       final Isodep = IsoDep.from(tag);
       if (Isodep == null) {
@@ -157,32 +170,30 @@ void _tagRead(context) {
       result = Isodep.identifier.toString();
       result="'"+result+"'";
       NfcManager.instance.stopSession();
-
-             getAllPresence();  
+            
               Flushbar(
                   message:  'TAG Identifier',
                   duration:  Duration(seconds: 2),
+                  messageColor:Colors.white,
+                  backgroundColor:Colors.green
                 ).show(context);
             try{
           
 	  var response = await http.put(Uri.parse("http://192.168.1.7/faith/updateemployee.php?test=$result"),headers: {"Accept":"application/json"});
+     getAllPresence();
+    print(result);
 	var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
-  dataPresence2=jsonData;
+  dataPresence=jsonData;
 
 });
 print(jsonData);
-
   }
   catch (e) {
 
        print("exception: ${e.toString()}");
   }
-if (dataPresence.contains(result)==true){
-  print("WORKED");
-}
-else{print(dataPresence.runtimeType);}
     });
   }
 

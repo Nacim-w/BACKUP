@@ -87,12 +87,16 @@ MaterialColor kPrimaryColor = const MaterialColor(
                       Flushbar(
                   message:  'Vehicule Ajouter',
                   duration:  Duration(seconds: 1),
+                   messageColor:Colors.white,
+                  backgroundColor:Colors.green                 
                 ).show(context);
                       FocusScope.of(context).unfocus();   }
                       else{
                          Flushbar(
                   message:  'Please fill up the empty field',
                   duration:  Duration(seconds: 2),
+                  messageColor:Colors.white,
+                  backgroundColor:Colors.red                  
                 ).show(context);
                       FocusScope.of(context).unfocus();
                       }

@@ -158,6 +158,8 @@ void _tagRead() {
            Flushbar(
                   message:  'Employee Ajouter',
                   duration:  const Duration(seconds: 2),
+                  messageColor:Colors.white,
+                  backgroundColor:Colors.green                  
                 ).show(context);
                       FocusScope.of(context).unfocus();
             try{
@@ -182,6 +184,8 @@ void _tagRead() {
             Flushbar(
                   message:  'Please fill up the empty field',
                   duration:  Duration(seconds: 2),
+                  messageColor:Colors.white,
+                  backgroundColor:Colors.red                 
                 ).show(context);
                       FocusScope.of(context).unfocus();
         
