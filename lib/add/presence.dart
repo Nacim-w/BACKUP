@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,7 @@ import 'package:draggable_fab/draggable_fab.dart';
 class Presence extends StatefulWidget {
 
    final String text;
-  const Presence({Key key, this.text})
+  const Presence({Key key,  this.text})
    : super(key:key );
 
   @override
@@ -31,7 +30,7 @@ String result="" ;
 
 Future getAllPresence()async{
     String selectedPresence="'"+widget.text+"'";
-var response = await http.get(Uri.parse("http://192.168.1.7/faith/presence.php?test=$selectedPresence"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://192.168.1.4/faith/presence.php?test=$selectedPresence"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -49,22 +48,22 @@ print(jsonData);
     getAllPresence();
   }
   // to define variables ///
-    List dataPresence=List();
+    List dataPresence=[];
 
     // Clean up the controller when the widget is disposed.
 MaterialColor kPrimaryColor = const MaterialColor(
-  (0xFFFFE0B2),
+  (0xFF1E2F97),
   const <int, Color>{
-    50: const Color(0xFFFFE0B2),
-    100: const Color(0xFFFFE0B2),
-    200: const Color(0xFFFFE0B2),
-    300: const Color(0xFFFFE0B2),
-    400: const Color(0xFFFFE0B2),
-    500: const Color(0xFFFFE0B2),
-    600: const Color(0xFFFFE0B2),
-    700: const Color(0xFFFFE0B2),
-    800: const Color(0xFFFFE0B2),
-    900: const Color(0xFFFFE0B2),
+    50: const Color(0xFF1E2F97),
+    100: const Color(0xFF1E2F97),
+    200: const Color(0xFF1E2F97),
+    300: const Color(0xFF1E2F97),
+    400: const Color(0xFF1E2F97),
+    500: const Color(0xFF1E2F97),
+    600: const Color(0xFF1E2F97),
+    700: const Color(0xFF1E2F97),
+    800: const Color(0xFF1E2F97),
+    900: const Color(0xFF1E2F97),
   },
 );
   
@@ -76,7 +75,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: kPrimaryColor,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0.0,
         ),
 
@@ -94,7 +93,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
             },
           ),
         ],
-              title: Text( "Liste De Présence "),
+              title: const Text( "Liste De Présence "),
               centerTitle: true,
             ),
            
@@ -102,8 +101,8 @@ MaterialColor kPrimaryColor = const MaterialColor(
             floatingActionButton: DraggableFab( 
             child :FloatingActionButton(
               // code to save data
-              child: Icon(Icons.nfc),
-              backgroundColor: Colors.orange[100],
+              child: const Icon(Icons.nfc),
+              backgroundColor: kPrimaryColor,
               onPressed:(){ _tagRead(context);},
             ),
             ),
@@ -115,7 +114,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
           itemBuilder: (context , index){
               return Container(
                 height: 100.0,
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child:Row(children: [
                   Expanded(flex: 5 ,child: Text(dataPresence[index]['tagid'])),
                   Expanded(flex: 2 ,child: Text(dataPresence[index]['matricule'])),
@@ -139,7 +138,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
           }
           ,separatorBuilder: (context,index)
           {
-            return Divider(thickness: 0.5,height: 0.5,);
+            return const Divider(thickness: 0.5,height: 0.5,);
           },itemCount: dataPresence.length);
     } ,
     
@@ -173,13 +172,13 @@ void _tagRead(context) {
             
               Flushbar(
                   message:  'TAG Identifier',
-                  duration:  Duration(seconds: 2),
+                  duration:  const Duration(seconds: 2),
                   messageColor:Colors.white,
                   backgroundColor:Colors.green
                 ).show(context);
             try{
           
-	  var response = await http.put(Uri.parse("http://192.168.1.7/faith/updateemployee.php?test=$result"),headers: {"Accept":"application/json"});
+	  var response = await http.put(Uri.parse("http://192.168.1.4/faith/updateemployee.php?test=$result"),headers: {"Accept":"application/json"});
      getAllPresence();
     print(result);
 	var jsonBody = response.body;

@@ -12,32 +12,37 @@ class Chauffeur extends StatefulWidget {
 class _chauffeurState extends State<Chauffeur> {
   // to define variables ///
   final _nameController = TextEditingController();
-  final _cincontroller = TextEditingController();
+  final _cinController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _addressController = TextEditingController();
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _nameController.dispose();
-    _cincontroller.dispose();
-
+    _cinController.dispose();
+    _lastnameController.dispose();
+    _addressController.dispose();
+    _firstnameController.dispose();
     super.dispose();
   }
 MaterialColor kPrimaryColor = const MaterialColor(
-  (0xFFFFE0B2),
+  (0xFF1E2F97),
   const <int, Color>{
-    50: const Color(0xFFFFE0B2),
-    100: const Color(0xFFFFE0B2),
-    200: const Color(0xFFFFE0B2),
-    300: const Color(0xFFFFE0B2),
-    400: const Color(0xFFFFE0B2),
-    500: const Color(0xFFFFE0B2),
-    600: const Color(0xFFFFE0B2),
-    700: const Color(0xFFFFE0B2),
-    800: const Color(0xFFFFE0B2),
-    900: const Color(0xFFFFE0B2),
+    50: const Color(0xFF1E2F97),
+    100: const Color(0xFF1E2F97),
+    200: const Color(0xFF1E2F97),
+    300: const Color(0xFF1E2F97),
+    400: const Color(0xFF1E2F97),
+    500: const Color(0xFF1E2F97),
+    600: const Color(0xFF1E2F97),
+    700: const Color(0xFF1E2F97),
+    800: const Color(0xFF1E2F97),
+    900: const Color(0xFF1E2F97),
   },
 );
   
-
   @override
   Widget build(BuildContext context) {
     // ui of data page
@@ -45,7 +50,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
       primarySwatch: kPrimaryColor,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0.0,
         ),
       ),
@@ -56,46 +61,143 @@ MaterialColor kPrimaryColor = const MaterialColor(
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
-              title: Text( "Chauffeur"),
+              title: const Text( "Chauffeur"),
               centerTitle: true,
             ),
 
             // ui of name textfield, direction textfield and image
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
                   
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
-                  // ui of name textfield
+                  // ui of first name textfield
+                 
+
+                TextFormField(
+                    controller: _firstnameController,
+                    decoration: InputDecoration(
+                      labelText:"Prenom" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+                    onChanged: (text) {
+                    },
+                  ),
+
+                      const SizedBox(height: 30),
+
+                      TextField(
+                    controller: _lastnameController,
+                    decoration: InputDecoration(
+                      labelText:"Nom" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+                    onChanged: (text) {
+                    },
+                  )
+                  
+                  ,const SizedBox(height: 30),
+
+                  // ui of cin textfield
                   TextField(
+                    controller: _cinController,
+                    decoration: InputDecoration(
+                      labelText:"Cin" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+                    onChanged: (text) {
+                    },
+                  ),
+                  const SizedBox(height: 30),
+
+                  // ui of Code textfield
+                   TextField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: "Nom"),
+                    decoration: InputDecoration(
+                      labelText:"Code" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
                     onChanged: (text) {
                       setState(() {
                       });
                     },
                   ),
-                      SizedBox(height: 30),
+                  
+                  const SizedBox(height: 30),
 
-                  // ui of direction textfield
+
+
+                  // ui of address textfield
                   TextField(
-                    controller: _cincontroller,
-                    decoration: InputDecoration(labelText: "Cin"),
+                    controller: _addressController,
+                    decoration: InputDecoration(
+                      labelText:"Address" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
                     onChanged: (text) {
                     },
                   ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
 
                    ElevatedButton(
-                          child: Text('Ajouter'),
+                     style: ButtonStyle(
+                       minimumSize: MaterialStateProperty.all(Size(125, 50)),
+
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(80.0),
+                        )
+                      )
+                    ),
+                          child: const Text('Ajouter'),
                           onPressed: () {
-                         if(_nameController.text!=""){
+                         if(_nameController.text!=""
+                         && _cinController.text!=""
+                         &&_firstnameController.text!=""
+                         &&_lastnameController.text!=""
+                         && _addressController.text!=""){
                       chauffeurs();
                       Flushbar(
                   message:  'Chauffeur Ajouter',
-                  duration:  Duration(seconds: 1),
+                  duration:  const Duration(seconds: 1),
                   messageColor:Colors.white,
                   backgroundColor:Colors.green                  
                 ).show(context);
@@ -103,7 +205,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
                          else{
                          Flushbar(
                   message:  'Please fill up the empty field',
-                  duration:  Duration(seconds: 2),
+                  duration:  const Duration(seconds: 2),
                   messageColor:Colors.white,
                   backgroundColor:Colors.red                 
                 ).show(context);
@@ -120,19 +222,23 @@ MaterialColor kPrimaryColor = const MaterialColor(
     try{
           
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.7/faith/insertchauffeur.php"),
+    (Uri.parse("http://192.168.1.4/faith/insertchauffeur.php"),
      body: {
       "id":   1.toString(),
       "name": _nameController.text,
-      "cin": _nameController.text,
+      "cin": _cinController.text,
+      "first_name": _firstnameController.text,
+      "last_name": _lastnameController.text,
+      "address": _addressController.text,
 	     });
        print(response.body);
 	}
   catch (e) {
 
        print("exception: ${e.toString()}");
-  }
-
+         }
 }
 
 }
+
+

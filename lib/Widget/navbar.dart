@@ -2,10 +2,11 @@ import 'package:desktop/add/employee.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../add/chauffeur.dart';
+import '../add/report.dart';
 import '../add/route.dart';
 import '../add/vehicule.dart';
 import '../add/voyage.dart';
-
+import '../location.dart';
 class NavBar extends StatelessWidget{
   @override 
   Widget build(BuildContext context){
@@ -13,7 +14,7 @@ class NavBar extends StatelessWidget{
       child: ListView(
         children: [
           UserAccountsDrawerHeader(accountName: const Text("Admin"), accountEmail: const Text("Admin@gmail.com"), decoration: BoxDecoration(
-        color: Colors.orange[100],
+        color: Color(0xFF1E2F97),
     )),
           ListTile(
            leading: const Icon(Icons.travel_explore),
@@ -26,8 +27,8 @@ class NavBar extends StatelessWidget{
                         ),
           ), 
           ListTile(
-           leading: Icon(Icons.person_add),
-           title: Text('Chauffeur'),
+           leading: const Icon(Icons.person_add),
+           title: const Text('Chauffeur'),
            onTap:()=>Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -56,7 +57,7 @@ class NavBar extends StatelessWidget{
                         ),
           ) ,
           ListTile(
-           leading: const Icon(Icons.bus_alert),
+           leading: const Icon(Icons.directions_car),
            title:const  Text('Vehicule'),
            onTap:()=>Navigator.push(
                           context,
@@ -70,11 +71,29 @@ class NavBar extends StatelessWidget{
           const Divider(
             thickness: 1,
           ),
-           ListTile(
-           leading: const Icon(Icons.settings),
-           title: const Text('Settings'),
-           onTap:() {},
+         ListTile(
+           leading: const Icon(Icons.map),
+           title: const Text('Map'),
+           onTap:() =>Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>MyHomePage(
+                              )),
+                        ),
+          ) , 
+           
+
+          ListTile(
+           leading: const Icon(Icons.report_problem),
+           title:const  Text('Problème'),
+           onTap:()=>Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Report_class(
+                              )),
+                        ),
           ) ,
+
            ListTile(
            leading:const  Icon(Icons.logout),
            title:const  Text('Logout'),

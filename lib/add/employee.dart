@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_manager/nfc_manager.dart';
@@ -16,7 +17,7 @@ class _employeeState extends State<Employee> {
   
 
   Future getAllRoute()async{
-var response = await http.get(Uri.parse("http://192.168.1.7/faith/viewallroute.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallroute.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -29,7 +30,9 @@ print(jsonData);
   // to define variables ///
     ValueNotifier<dynamic> result = ValueNotifier(null);
   final _matriculeController = TextEditingController();
-List dataRoute=List();
+  final _nameController = TextEditingController();
+
+List dataRoute=[];
 String selectedRoute;
 @override
   void initState() {
@@ -37,18 +40,18 @@ String selectedRoute;
     getAllRoute();
   }
 MaterialColor kPrimaryColor = const MaterialColor(
-  (0xFFFFE0B2),
+  (0xFF1E2F97),
   const <int, Color>{
-    50: const Color(0xFFFFE0B2),
-    100: const Color(0xFFFFE0B2),
-    200: const Color(0xFFFFE0B2),
-    300: const Color(0xFFFFE0B2),
-    400: const Color(0xFFFFE0B2),
-    500: const Color(0xFFFFE0B2),
-    600: const Color(0xFFFFE0B2),
-    700: const Color(0xFFFFE0B2),
-    800: const Color(0xFFFFE0B2),
-    900: const Color(0xFFFFE0B2),
+    50: const Color(0xFF1E2F97),
+    100: const Color(0xFF1E2F97),
+    200: const Color(0xFF1E2F97),
+    300: const Color(0xFF1E2F97),
+    400: const Color(0xFF1E2F97),
+    500: const Color(0xFF1E2F97),
+    600: const Color(0xFF1E2F97),
+    700: const Color(0xFF1E2F97),
+    800: const Color(0xFF1E2F97),
+    900: const Color(0xFF1E2F97),
   },
 );
 
@@ -56,6 +59,8 @@ MaterialColor kPrimaryColor = const MaterialColor(
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _matriculeController.dispose();
+    _nameController.dispose();
+
 
     super.dispose();
   }
@@ -67,7 +72,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
       debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: kPrimaryColor,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0.0,
         ),
 
@@ -78,7 +83,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
-              title: Text( "Employee"),
+              title: const Text( "Employee"),
               centerTitle: true,
               actions: <Widget>[
           IconButton(
@@ -93,44 +98,96 @@ MaterialColor kPrimaryColor = const MaterialColor(
 
             // ui of name textfield, direction textfield and image
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
                   
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
 
                   // ui of name textfield
+                 TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText:"Nom" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+                    onChanged: (text) {
+                      setState(() {
+                      });
+                    },
+                  ),            
+                  const SizedBox(height: 30),
+                       
                   TextField(
                     controller: _matriculeController,
-                    decoration: InputDecoration(labelText: "Donnez Matricule"),
+                    decoration: InputDecoration(
+                      labelText:"Matricule" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
                     onChanged: (text) {
                       setState(() {
                       });
                     },
                   ),
-                      SizedBox(height: 50),
+                  const SizedBox(height: 30),
 
-                 DropdownButton(value: selectedRoute,
+                 DropdownButton2(value: selectedRoute,
                 isExpanded: true, //make true to take width of parent widget
                  underline: Container(),
                  isDense: true,
-                  hint : Text('Select Route'),
+                  hint : const Text('Select Route'),
                   items: dataRoute.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['route']),
-                      value: list['route'].toString(),                    
+                      value: list['id'].toString(),                    
                       );
                   },).toList(),
+                   buttonHeight: 65,
+          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.black26,
+            ),
+          ),
                   onChanged: (value){
                     setState(() {
-                      selectedRoute= value;
+                       selectedRoute= value ;
+
                     });
                   },
+                   dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+          ),
                   ),
-                                        SizedBox(height: 30),
+                                        const SizedBox(height: 30),
 
                   ElevatedButton(
-                          child: Text('Ajouter'), onPressed: () {
+                    style: ButtonStyle(
+                       minimumSize: MaterialStateProperty.all(Size(125, 50)),
+
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(80.0),
+                )
+              )
+            ),
+                          child: const Text('Ajouter'), onPressed: () {
                       _tagRead();
                      
                       FocusScope.of(context).unfocus();            },), 
@@ -140,10 +197,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
   }
 
 
- Future<List> vehicles() async {
-   
 
-}
 void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
             if(_matriculeController.text!="" && selectedRoute!=null  ){
@@ -163,14 +217,14 @@ void _tagRead() {
                 ).show(context);
                       FocusScope.of(context).unfocus();
             try{
-          
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.7/faith/insertemployee.php"),
+    (Uri.parse("http://192.168.1.4/faith/insertemployee.php"),
      body: {
       "id":   1.toString(),
+      "name":_nameController.text,
+      "route_id":selectedRoute,
       "matricule": _matriculeController.text,
       "tagid":result.value,
-      "route":selectedRoute,
 
 	     });
        print(response.body);
@@ -183,7 +237,7 @@ void _tagRead() {
           else{
             Flushbar(
                   message:  'Please fill up the empty field',
-                  duration:  Duration(seconds: 2),
+                  duration:  const Duration(seconds: 2),
                   messageColor:Colors.white,
                   backgroundColor:Colors.red                 
                 ).show(context);

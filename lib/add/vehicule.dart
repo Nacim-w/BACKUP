@@ -12,27 +12,29 @@ class Vehicule extends StatefulWidget {
 class _vehiculeState extends State<Vehicule> {
 
   // to define variables ///
-  final _nameController = TextEditingController();
+  final _typeController = TextEditingController();
+  final _matriculeController = TextEditingController();
 MaterialColor kPrimaryColor = const MaterialColor(
-  (0xFFFFE0B2),
+  (0xFF1E2F97),
   const <int, Color>{
-    50: const Color(0xFFFFE0B2),
-    100: const Color(0xFFFFE0B2),
-    200: const Color(0xFFFFE0B2),
-    300: const Color(0xFFFFE0B2),
-    400: const Color(0xFFFFE0B2),
-    500: const Color(0xFFFFE0B2),
-    600: const Color(0xFFFFE0B2),
-    700: const Color(0xFFFFE0B2),
-    800: const Color(0xFFFFE0B2),
-    900: const Color(0xFFFFE0B2),
+    50: const Color(0xFF1E2F97),
+    100: const Color(0xFF1E2F97),
+    200: const Color(0xFF1E2F97),
+    300: const Color(0xFF1E2F97),
+    400: const Color(0xFF1E2F97),
+    500: const Color(0xFF1E2F97),
+    600: const Color(0xFF1E2F97),
+    700: const Color(0xFF1E2F97),
+    800: const Color(0xFF1E2F97),
+    900: const Color(0xFF1E2F97),
   },
 );
  
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _nameController.dispose();
+    _typeController.dispose();
+    _matriculeController.dispose();
     super.dispose();
   }
 
@@ -43,7 +45,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
       primarySwatch: kPrimaryColor,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0.0,
         ),
       ),
@@ -54,21 +56,51 @@ MaterialColor kPrimaryColor = const MaterialColor(
           resizeToAvoidBottomInset: false,
             drawer: NavBar(),
             appBar: AppBar(
-              title: Text( "Vehicule"),
+              title: const Text( "Vehicule"),
               centerTitle: true,
             ),
-            // ui of name textfield, direction textfield and image
+            // ui of type textfield, direction textfield and image
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
                   
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
 
-                  // ui of name textfield
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(labelText: "Donnez Nom"),
+                  // ui of type textfield
+                  TextFormField(
+                    controller: _typeController,
+                    decoration:InputDecoration(
+                      labelText:"Type" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+                    onChanged: (text) {
+                      setState(() {
+                      });
+                    },
+                  ),
+                                            const SizedBox(height: 30),
+
+                  TextFormField(
+                    controller: _matriculeController,
+                    decoration: InputDecoration(
+                      labelText:"Address" ,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                hintStyle: const TextStyle(fontSize: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
                     onChanged: (text) {
                       setState(() {
                       });
@@ -78,15 +110,25 @@ MaterialColor kPrimaryColor = const MaterialColor(
                   
                   // ui of direction textfield
                
-                          SizedBox(height: 50),
+                          const SizedBox(height: 50),
 
                     ElevatedButton(
-                          child: Text('Ajouter'), onPressed: () {
-                      if(_nameController.text!=""){
+                      style: ButtonStyle(
+                       minimumSize: MaterialStateProperty.all(Size(125, 50)),
+
+  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(80.0),
+    )
+  )
+),
+                          child: const Text('Ajouter'), onPressed: () {
+                      if(_typeController.text!="" && _matriculeController.text!="" ){
                       vehicules();
                       Flushbar(
                   message:  'Vehicule Ajouter',
-                  duration:  Duration(seconds: 1),
+                  duration:  const Duration(seconds: 1),
                    messageColor:Colors.white,
                   backgroundColor:Colors.green                 
                 ).show(context);
@@ -94,7 +136,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
                       else{
                          Flushbar(
                   message:  'Please fill up the empty field',
-                  duration:  Duration(seconds: 2),
+                  duration:  const Duration(seconds: 2),
                   messageColor:Colors.white,
                   backgroundColor:Colors.red                  
                 ).show(context);
@@ -112,10 +154,11 @@ MaterialColor kPrimaryColor = const MaterialColor(
     try{
           
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.7/faith/insertvehicule.php"),
+    (Uri.parse("http://192.168.1.4/faith/insertvehicule.php"),
      body: {
       "id":   1.toString(),
-      "name": _nameController.text,
+      "type": _typeController.text,
+      "matricule":_matriculeController.text,
 	     });
        print(response.body);
 	}
@@ -123,7 +166,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
 
        print("exception: ${e.toString()}");
   }
-
+     
 }
 
 }

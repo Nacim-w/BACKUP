@@ -3,7 +3,9 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/add/presence.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import '../Widget/navbar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 
 class Voyage extends StatefulWidget {
@@ -13,43 +15,46 @@ class Voyage extends StatefulWidget {
 
 class voyageState extends State<Voyage> {
   Future getAllChauffeur()async{
-var response = await http.get(Uri.parse("http://192.168.1.7/faith/viewallchauffeur.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallchauffeur.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
   dataChauffeur=jsonData;
 
 });
-print(jsonData);
+//print(jsonData);
 }
 
 Future getAllRoute()async{
-var response = await http.get(Uri.parse("http://192.168.1.7/faith/viewallroute.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallroute.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
   dataRoute=jsonData;
 
 });
-print(jsonData);
+//print(jsonData);
 }Future getAllVehicule()async{
-var response = await http.get(Uri.parse("http://192.168.1.7/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
   dataVehicule=jsonData;
 
 });
-print(jsonData);
+//print(jsonData);
 }
-  // to define variables ///
-    List dataChauffeur=List();
-    List dataRoute=List();
-    List dataVehicule=List();
 
-  String selectedChauffeur;
-  String selectedRoute;
-  String selectedVehicule;
+
+  // to define variables //
+    List dataChauffeur=[];
+    List dataRoute=[];
+    List dataVehicule=[];
+
+   String selectedChauffeur;
+   String selectedRoute;
+   String selectedVehicule;
+   String selectedLocation;
 
 
   @override
@@ -58,20 +63,21 @@ print(jsonData);
     getAllChauffeur();
     getAllVehicule();
     getAllRoute();
+
   }
- MaterialColor kPrimaryColor = const MaterialColor(
-  (0xFFFFE0B2),
+MaterialColor kPrimaryColor = const MaterialColor(
+  (0xFF1E2F97),
   const <int, Color>{
-    50: const Color(0xFFFFE0B2),
-    100: const Color(0xFFFFE0B2),
-    200: const Color(0xFFFFE0B2),
-    300: const Color(0xFFFFE0B2),
-    400: const Color(0xFFFFE0B2),
-    500: const Color(0xFFFFE0B2),
-    600: const Color(0xFFFFE0B2),
-    700: const Color(0xFFFFE0B2),
-    800: const Color(0xFFFFE0B2),
-    900: const Color(0xFFFFE0B2),
+    50: const Color(0xFF1E2F97),
+    100: const Color(0xFF1E2F97),
+    200: const Color(0xFF1E2F97),
+    300: const Color(0xFF1E2F97),
+    400: const Color(0xFF1E2F97),
+    500: const Color(0xFF1E2F97),
+    600: const Color(0xFF1E2F97),
+    700: const Color(0xFF1E2F97),
+    800: const Color(0xFF1E2F97),
+    900: const Color(0xFF1E2F97),
   },
 );
 
@@ -85,7 +91,7 @@ print(jsonData);
     // ui of data page
     return MaterialApp(
     debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+       theme: ThemeData(
       primarySwatch: kPrimaryColor,
       appBarTheme: AppBarTheme(
         elevation: 0.0,
@@ -98,7 +104,7 @@ print(jsonData);
           drawer: NavBar(),
           resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: Text( "Voyage"),
+              title: const Text( "Voyage"),
               centerTitle: true,
             ),
             /*floatingActionButton: FloatingActionButton(
@@ -108,77 +114,166 @@ print(jsonData);
             ),*/
 
             // ui of vehicule textfield, route textfield and chauffeur
-            body: SingleChildScrollView(
-              padding: EdgeInsets.all(10.0),
+            body: Center(
               child: Column(
                 children: <Widget>[
                   // ui of chauffeur textfield
-                 SizedBox(height: 50),
-                DropdownButton(value: selectedChauffeur,
+                 const SizedBox(height: 50),
+                DropdownButton2(value: selectedChauffeur,
                 isExpanded: true, //make true to take width of parent widget
                 isDense: true,
                  underline: Container(),
-                  hint : Text('Select Chauffeur'),
+                  hint : Row(
+            children: const [
+              Icon(
+                Icons.person,
+                size: 25,
+                color:Colors.black45,
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              Expanded(
+                child: Text(
+                  '  Select Chaffeur',
+                ),
+              ),
+            ],
+          ),
                   items: dataChauffeur.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['name']),
                       value: list['name'].toString(),                    
                       );
-                  },).toList(),
+                  },).toList(), buttonHeight: 50,
+                   buttonWidth: 350,
+          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.black26,
+            ),
+          ),
                   onChanged: (value){
                     setState(() {
-                      selectedChauffeur= value;
+                      selectedChauffeur= value ;
                     });
                   },
                   ),
                   // ui of vehicule textfield
-                  SizedBox(height: 50),
-               DropdownButton(value: selectedVehicule,
+                  const SizedBox(height: 50),
+               DropdownButton2(value: selectedVehicule,
                   isDense: true,
-                  hint : Text('Select Vehicule'),
+                  hint : Row(
+            children: const [
+              Icon(
+                Icons.directions_car,
+                size: 25,
+                color:Colors.black45,
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              Expanded(
+                child: Text(
+                  '  Select Vehicule',
+                ),
+              ),
+            ],
+          ),
                   isExpanded: true, //make true to take width of parent widget
                   underline: Container(),
                   items: dataVehicule.map((list){
                     return DropdownMenuItem<String>(
-                      child: Text(list['name']),
-                      value: list['name'].toString(),                    
+                      child: Text(list['type']),
+                      value: list['type'].toString(),                    
                       );
-                  },).toList(),
+                  },).toList(), buttonHeight: 50,
+                   buttonWidth: 350,
+          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.black26,
+            ),
+          ),
+                  
                   onChanged: (value){
                     setState(() {
-                      selectedVehicule= value;
+                      selectedVehicule= value ;
                     });
                   },
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   // ui of route textfield
-                  DropdownButton(value: selectedRoute,
+                  DropdownButton2(value: selectedRoute,
                   isDense: true,
                   isExpanded: true, //make true to take width of parent widget
                   underline: Container(),
-                  hint : Text('Select route'),
+                  hint : Row(
+            children: const [
+              Icon(
+                Icons.location_on,
+                size: 25,
+                color:Colors.black45,
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              Expanded(
+                child: Text(
+                  '  Select Route',
+                ),
+              ),
+            ],
+          ),
                   items: dataRoute.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['route']),
-                      value: list['route'].toString(),                    
+                      value: list['id'].toString(),                    
                       );
                   },).toList(),
+                   buttonHeight: 50,
+                   buttonWidth: 350,
+          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.black26,
+            ),
+          ),
+          dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+          ),
+            scrollbarRadius: const Radius.circular(40),
+            scrollbarThickness: 6,
+            scrollbarAlwaysShow: true,
                   onChanged: (value){
                     setState(() {
-                      selectedRoute= value;
+                      selectedRoute= value ;
                     });
                   },
                   ),
                 
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                    ElevatedButton(
-                          child: Text('Start'), onPressed:() {
+                     style: ButtonStyle(
+                       minimumSize: MaterialStateProperty.all(Size(125, 50)),
+
+  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(80.0),
+    )
+  )
+),
+                          child: const Text('Start'), onPressed:() {
                       
                        if(selectedChauffeur!=null && selectedRoute!=null && selectedVehicule!=null ){
                          voyages();
                              Flushbar(
                   message:  'Voyage Ajouter',
-                  duration:  Duration(seconds: 1),
+                  duration:  const Duration(seconds: 1),
                 ).show(context);
 
                          Navigator.push(
@@ -192,15 +287,18 @@ print(jsonData);
                           }
                           else{
                         ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: const Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                      const SnackBar(duration: Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
                       }            
                       
                       
-                      
+
                             },),
+                            
                 ],
               ),
             )));
+
+            
   }
 
 
@@ -208,7 +306,7 @@ print(jsonData);
     try{
           
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.7/faith/insertvoyage.php"),
+    (Uri.parse("http://192.168.1.4/faith/insertvoyage.php"),
      body: {
       "id":   1.toString(),
       "vehicule": selectedVehicule,
@@ -221,6 +319,7 @@ print(jsonData);
 
        print("exception: ${e.toString()}");
   }
+     
 
 }
 }

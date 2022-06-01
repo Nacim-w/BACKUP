@@ -1,21 +1,24 @@
+import 'dart:convert';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 
-class Route_class extends StatefulWidget {
+class Report_class extends StatefulWidget {
   @override
-  _routeState createState() => _routeState();
+  _reportState createState() => _reportState();
 }
 
-class _routeState extends State<Route_class> {
+class _reportState extends State<Report_class> {
   // to define variables ///
-  final _routeController = TextEditingController();
+  final _textController = TextEditingController();
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _routeController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 MaterialColor kPrimaryColor = const MaterialColor(
@@ -33,6 +36,26 @@ MaterialColor kPrimaryColor = const MaterialColor(
     900: const Color(0xFF1E2F97),
   },
 );
+    List dataVehicule=[];
+
+Future getAllVehicule()async{
+var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
+var jsonBody = response.body;
+var jsonData = json.decode(jsonBody);
+setState(() {
+  dataVehicule=jsonData;
+
+});
+print(jsonData);
+}
+  // to define variables ///
+
+String selectedVehicule;
+@override
+  void initState() {
+    super.initState();
+    getAllVehicule();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +74,11 @@ MaterialColor kPrimaryColor = const MaterialColor(
           resizeToAvoidBottomInset: false,
              drawer: NavBar(),
             appBar: AppBar(
-              title: const Text( "Route"),
+              title: const Text( "Report"),
               centerTitle: true,
             ),
 
-            // ui of route textfield, route textfield and image
+            // ui of report textfield, report textfield and image
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -63,11 +86,13 @@ MaterialColor kPrimaryColor = const MaterialColor(
                   
                           const SizedBox(height: 30),
 
-                  // ui of route textfield
+                  // ui of report textfield
                   TextField(
-                    controller: _routeController,
+                      keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                    controller: _textController,
                     decoration: InputDecoration(
-                      labelText:"Route" ,
+                      labelText:"Report" ,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 20,
@@ -83,7 +108,39 @@ MaterialColor kPrimaryColor = const MaterialColor(
                     },
                   ),
 
-                  // ui of route textfield
+                  const SizedBox(height: 30),
+
+                 DropdownButton2(value: selectedVehicule,
+                isExpanded: true, //make true to take width of parent widget
+                 underline: Container(),
+                 isDense: true,
+                  hint : const Text('Select Vehicule'),
+                  items: dataVehicule.map((list){
+                    return DropdownMenuItem<String>(
+                      child: Text(list['type']),
+                      value: list['id'].toString(),                    
+                      );
+                  },).toList(),
+                   buttonHeight: 65,
+          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.black26,
+            ),
+          ),
+                  onChanged: (value){
+                    setState(() {
+                       selectedVehicule= value ;
+
+                    });
+                  },
+                   dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+          ),
+                  ),
+
+                  // ui of report textfield
                
                                       const SizedBox(height: 50),
 
@@ -98,11 +155,11 @@ MaterialColor kPrimaryColor = const MaterialColor(
     )
   )
 ),
-                          child: const Text('Ajouter'), onPressed: () {
-                      if(_routeController.text!=""){
-                      routes();
+                          child: const Text('Report'), onPressed: () {
+                      if(_textController.text!=""){
+                      reports();
                        Flushbar(
-                  message:  "Route Ajouter",
+                  message:  "Reporté",
                   duration:  const Duration(seconds: 1),
                   messageColor:Colors.white,
                   backgroundColor:Colors.green
@@ -129,14 +186,15 @@ MaterialColor kPrimaryColor = const MaterialColor(
   }
 
 
- Future<List> routes() async {
+ Future<List> reports() async {
     try{
           
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.4/faith/insertroute.php"),
+    (Uri.parse("http://192.168.1.4/faith/insertreport.php"),
      body: {
       "id":   1.toString(),
-      "route": _routeController.text,
+      "text": _textController.text,
+      "vehicule_id":selectedVehicule,
 	     });
        print(response.body);
 	}
