@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,33 +33,18 @@ class _MyHomePageState extends State<MyHomePage> {
     ByteData byteData = await DefaultAssetBundle.of(context).load("assets/car.png");
     return byteData.buffer.asUint8List();
   }
-  String latitude;
-  String longitude;
-   var latitudeD;
-   var longitudeD;
-    List loc=[];
-      @override
-  void initState() {
-    super.initState();
-    getloc();
-  }
-Future getloc() async{
-var response = await http.get(Uri.parse("http://192.168.1.4/faith/getlocation.php"),headers: {"Accept":"application/json"});
-var jsonBody = response.body;
-var jsonData = json.decode(jsonBody);
-setState(() {
- loc=jsonData;
-latitude=loc[0]['latitude'];
-latitudeD = double.parse(latitude);
- longitude= loc[0]['longitude'];
-longitudeD= double.parse(longitude);
-});
-}
+
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) async{
-    getloc();
-    LatLng latlng = LatLng(latitudeD,longitudeD);
-    
+    final response = await http.post
+    (Uri.parse("http://192.168.76.16/faith/location.php"),
+     body: {
+      "id":   1.toString(),
+      "latitude": newLocalData.latitude.toString(),
+      "longitude": newLocalData.longitude.toString(),
+
+	     });
+    LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
     this.setState(() {
       marker = Marker(
           markerId: MarkerId("home"),
@@ -83,10 +67,10 @@ longitudeD= double.parse(longitude);
 
   void getCurrentLocation() async {
     try {
-      getloc();
+
       Uint8List imageData = await getMarker();
       var location = await _locationTracker.getLocation();
-      print(location);
+
       updateMarkerAndCircle(location, imageData);
 
       if (_locationSubscription != null) {
@@ -96,7 +80,7 @@ longitudeD= double.parse(longitude);
         if (_controller != null) {
           _controller.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
               bearing: 192.8334901395799,
-              target: LatLng(latitudeD,longitudeD),
+              target: LatLng(newLocalData.latitude, newLocalData.longitude),
               tilt: 0,
               zoom: 18.00)));
           updateMarkerAndCircle(newLocalData, imageData);
