@@ -1,6 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import '../add/voyage.dart';
 import '../components/background.dart';
+import 'package:http/http.dart' as http;
+
 
 class LoginWidget extends StatefulWidget{
   @override
@@ -46,7 +51,7 @@ class _LoginWidgetState extends State<LoginWidget>{
               child: TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  labelText: "Email"
+                  labelText: "Username"
                 ),
               ),
             ),
@@ -72,7 +77,7 @@ class _LoginWidgetState extends State<LoginWidget>{
               alignment: Alignment.centerRight,
               margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: RaisedButton(
-                onPressed: signIn,
+                onPressed: login,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                 textColor: Colors.white,
                 padding:  EdgeInsets.all(0),
@@ -111,16 +116,27 @@ class _LoginWidgetState extends State<LoginWidget>{
 
 
 
-Future signIn() async{
-  try{
-  await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-  );
+Future login() async {
+    var response = await http.post(Uri.parse("http://172.16.48.37/faith/login_driver.php"),
+     body: {
+      "cin": emailController.text,
+      "code": passwordController.text,
+    });
+    var jsonBody = response.body;
+    var jsonData = json.decode(jsonBody);
+    print(jsonBody);
+     if (jsonData == "Success") {
+      Flushbar(
+        duration:  const Duration(seconds: 1),
+        message:'Login Successful',
+        messageColor:Colors.white,
+        backgroundColor:Colors.green      ).show(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Voyage(),),);
+    }   else Flushbar(
+                  message:  'Invalid Credentials',
+                  duration:  const Duration(seconds: 2),
+                  messageColor:Colors.white,
+                  backgroundColor:Colors.red                  
+                ).show(context); 
+  }
 }
-catch(e)
-{
-         print("exception: ${e.toString()}");
-
-}
-}}

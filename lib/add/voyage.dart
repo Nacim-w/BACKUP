@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/add/presence.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 import '../Widget/navbar.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -14,8 +14,10 @@ class Voyage extends StatefulWidget {
 }
 
 class voyageState extends State<Voyage> {
+  
+
   Future getAllChauffeur()async{
-var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallchauffeur.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://172.16.48.37/faith/viewallchauffeur.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -26,7 +28,7 @@ setState(() {
 }
 
 Future getAllRoute()async{
-var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallroute.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://172.16.48.37/faith/viewallroute.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -35,7 +37,7 @@ setState(() {
 });
 //print(jsonData);
 }Future getAllVehicule()async{
-var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://172.16.48.37/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -104,7 +106,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
           drawer: NavBar(),
           resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              title: const Text( "Voyage"),
+              title: const Text( "Journey"),
               centerTitle: true,
             ),
             /*floatingActionButton: FloatingActionButton(
@@ -135,15 +137,15 @@ MaterialColor kPrimaryColor = const MaterialColor(
               ),
               Expanded(
                 child: Text(
-                  '  Select Chaffeur',
+                  '  Select Driver',
                 ),
               ),
             ],
           ),
                   items: dataChauffeur.map((list){
                     return DropdownMenuItem<String>(
-                      child: Text(list['name']),
-                      value: list['name'].toString(),                    
+                      child: Text(list['code']),
+                      value: list['code'].toString(),                    
                       );
                   },).toList(), buttonHeight: 50,
                    buttonWidth: 350,
@@ -153,6 +155,9 @@ MaterialColor kPrimaryColor = const MaterialColor(
             border: Border.all(
               color: Colors.black26,
             ),
+          ),
+          dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
           ),
                   onChanged: (value){
                     setState(() {
@@ -176,7 +181,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
               ),
               Expanded(
                 child: Text(
-                  '  Select Vehicule',
+                  '  Select Vehicle',
                 ),
               ),
             ],
@@ -196,6 +201,9 @@ MaterialColor kPrimaryColor = const MaterialColor(
             border: Border.all(
               color: Colors.black26,
             ),
+          ),
+          dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
           ),
                   
                   onChanged: (value){
@@ -255,6 +263,8 @@ MaterialColor kPrimaryColor = const MaterialColor(
                   },
                   ),
                 
+
+
                   const SizedBox(height: 50),
                    ElevatedButton(
                      style: ButtonStyle(
@@ -271,8 +281,9 @@ MaterialColor kPrimaryColor = const MaterialColor(
                       
                        if(selectedChauffeur!=null && selectedRoute!=null && selectedVehicule!=null ){
                          voyages();
+                         
                              Flushbar(
-                  message:  'Voyage Ajouter',
+                  message:  'Journey Started',
                   duration:  const Duration(seconds: 1),
                 ).show(context);
 
@@ -281,13 +292,18 @@ MaterialColor kPrimaryColor = const MaterialColor(
                           context,
                           MaterialPageRoute(
 
-                              builder: (context) => Presence(text: selectedRoute)
+                              builder: (context) => Presence(text: selectedRoute , value: selectedVehicule)
                               ),
                         );                        
                           }
                           else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(duration: Duration(seconds: 2) ,content: Text('Please fill up the empty field')));
+                        Flushbar(
+                  message:  'Please fill up the empty field',
+                  duration:  const Duration(seconds: 2),
+                  messageColor:Colors.white,
+                  backgroundColor:Colors.red                 
+                ).show(context);
+                      FocusScope.of(context).unfocus();
                       }            
                       
                       
@@ -306,7 +322,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
     try{
           
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.4/faith/insertvoyage.php"),
+    (Uri.parse("http://172.16.48.37/faith/insertvoyage.php"),
      body: {
       "id":   1.toString(),
       "vehicule": selectedVehicule,
@@ -319,7 +335,14 @@ MaterialColor kPrimaryColor = const MaterialColor(
 
        print("exception: ${e.toString()}");
   }
-     
+
+
+
+
+
+       
+
 
 }
+
 }

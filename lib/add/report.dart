@@ -39,7 +39,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
     List dataVehicule=[];
 
 Future getAllVehicule()async{
-var response = await http.get(Uri.parse("http://192.168.1.4/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://172.16.48.37/faith/viewallvehicule.php"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -114,7 +114,7 @@ String selectedVehicule;
                 isExpanded: true, //make true to take width of parent widget
                  underline: Container(),
                  isDense: true,
-                  hint : const Text('Select Vehicule'),
+                  hint : const Text('Select Vehicle'),
                   items: dataVehicule.map((list){
                     return DropdownMenuItem<String>(
                       child: Text(list['type']),
@@ -155,11 +155,11 @@ String selectedVehicule;
     )
   )
 ),
-                          child: const Text('Report'), onPressed: () {
+                          child: const Text('Submit'), onPressed: () {
                       if(_textController.text!=""){
                       reports();
                        Flushbar(
-                  message:  "Reporté",
+                  message:  "Reported",
                   duration:  const Duration(seconds: 1),
                   messageColor:Colors.white,
                   backgroundColor:Colors.green
@@ -190,10 +190,10 @@ String selectedVehicule;
     try{
           
 	  final response = await http.post
-    (Uri.parse("http://192.168.1.4/faith/insertreport.php"),
+    (Uri.parse("http://172.16.48.37/faith/insertreport.php"),
      body: {
       "id":   1.toString(),
-      "text": _textController.text,
+      "report": _textController.text,
       "vehicule_id":selectedVehicule,
 	     });
        print(response.body);

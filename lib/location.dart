@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
-
-
 import 'Widget/navbar.dart';
 
 
@@ -37,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) async{
     final response = await http.post
-    (Uri.parse("http://192.168.76.16/faith/location.php"),
+    (Uri.parse("http://172.16.48.37/faith/location.php"),
      body: {
       "id":   1.toString(),
       "latitude": newLocalData.latitude.toString(),

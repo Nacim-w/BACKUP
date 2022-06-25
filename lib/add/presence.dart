@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:desktop/Widget/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_manager/platform_tags.dart';
 import 'package:draggable_fab/draggable_fab.dart';
@@ -12,7 +15,9 @@ import 'package:draggable_fab/draggable_fab.dart';
 class Presence extends StatefulWidget {
 
    final String text;
-  const Presence({Key key,  this.text})
+   
+    final value;
+  const Presence({Key key,  this.text , this.value})
    : super(key:key );
 
   @override
@@ -26,11 +31,15 @@ class _presenceState extends State<Presence> {
 
  
   // to define variables ///
+  StreamSubscription _locationSubscription;
+  Location _locationTracker = Location();
+      @override
+
 String result="" ;
 
 Future getAllPresence()async{
     String selectedPresence="'"+widget.text+"'";
-var response = await http.get(Uri.parse("http://192.168.1.4/faith/presence.php?test=$selectedPresence"),headers: {"Accept":"application/json"});
+var response = await http.get(Uri.parse("http://172.16.48.37/faith/presence.php?test=$selectedPresence"),headers: {"Accept":"application/json"});
 var jsonBody = response.body;
 var jsonData = json.decode(jsonBody);
 setState(() {
@@ -86,14 +95,14 @@ MaterialColor kPrimaryColor = const MaterialColor(
             appBar: AppBar(
               actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.add_location_rounded),
               tooltip: 'Show Snackbar',
               onPressed: () {
-                      getAllPresence();
+                      getCurrentLocation();
             },
           ),
         ],
-              title: const Text( "Liste De Présence "),
+              title: const Text( "Presence"),
               centerTitle: true,
             ),
            
@@ -116,7 +125,7 @@ MaterialColor kPrimaryColor = const MaterialColor(
                 height: 100.0,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child:Row(children: [
-                  Expanded(flex: 5 ,child: Text(dataPresence[index]['tagid'])),
+                  Expanded(flex: 5 ,child: Text(dataPresence[index]['name'])),
                   Expanded(flex: 2 ,child: Text(dataPresence[index]['matricule'])),
                   Expanded(flex: 2 , child: Row(
                     children:[
@@ -178,7 +187,7 @@ void _tagRead(context) {
                 ).show(context);
             try{
           
-	  var response = await http.put(Uri.parse("http://192.168.1.4/faith/updateemployee.php?test=$result"),headers: {"Accept":"application/json"});
+	  var response = await http.put(Uri.parse("http://172.16.48.37/faith/updateemployee.php?test=$result"),headers: {"Accept":"application/json"});
      getAllPresence();
     print(result);
 	var jsonBody = response.body;
@@ -196,6 +205,38 @@ print(jsonData);
     });
   }
 
+Future getCurrentLocation() async {
+    try {
+
+      var location = await _locationTracker.getLocation();
+            if (_locationSubscription != null) {
+        _locationSubscription.cancel();
+      }
+      String car=(widget.value);
+      _locationSubscription = _locationTracker.onLocationChanged.listen((newLocalData) async {
+      
+              
+          final response =  await http.post
+    (Uri.parse("http://172.16.48.37/faith/location.php"),
+     body: {
+      "id":   1.toString(),
+      "latitude": newLocalData.latitude.toString(),
+      "longitude": newLocalData.longitude.toString(),
+      "vehicule": car,
+
+	     });     
+       print(response.body);   
+      
+      
+      }
+      );
+
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        debugPrint("Permission Denied");
+      }
+    }
+ }
 
 
 
